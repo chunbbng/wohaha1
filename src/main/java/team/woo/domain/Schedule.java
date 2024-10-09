@@ -49,10 +49,22 @@ public class Schedule {
     // TaskType과의 ManyToOne 관계 설정
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "task_type_id")  // 외래 키 설정
+    @JsonIgnore
     private TaskType taskType;
 
     // 예상 소요 시간 저장 필드
     private double estimatedTime;
+
+    @Transient // JPA에서 관리하지 않을 필드
+    private String taskTypeName;
+
+    public void setTaskTypeName() {
+        if (this.taskType != null) {
+            this.taskTypeName = this.taskType.getName();
+        } else {
+            this.taskTypeName = "Unknown";
+        }
+    }
 
     public Schedule() {
         // 기본 생성자

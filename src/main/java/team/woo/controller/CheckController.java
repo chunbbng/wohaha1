@@ -30,10 +30,21 @@ public class CheckController {
 
         if (member == null) {
             log.info("로그인 정보가 없습니다.");
-            return "redirect:/login"; // 로그인 페이지로 리다이렉트
+            return "redirect:/"; // 로그인 페이지로 리다이렉트
         }
 
         List<Schedule> schedules = scheduleRepository.findByMemberId(member.getId());
+
+        for (Schedule schedule : schedules) {
+            // taskType 이름을 직접 설정
+            if (schedule.getTaskType() != null) {
+                schedule.setTaskTypeName(schedule.getTaskType().getName());
+            } else {
+                schedule.setTaskTypeName("Unknown");
+            }
+        }
+
+        log.info("schedules={}", schedules);
         model.addAttribute("schedules", schedules);
         return "check";
     }
